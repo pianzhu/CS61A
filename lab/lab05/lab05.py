@@ -50,9 +50,8 @@ def berry_finder(t):
     else:
         for branch in branches(t):
             if(berry_finder(branch)):
-               return True 
+                return True
     return False
-
 
 
 def sprout_leaves(t, leaves):
@@ -90,9 +89,21 @@ def sprout_leaves(t, leaves):
     """
     "*** YOUR CODE HERE ***"
     if(is_leaf(t)):
+        return tree(t[0], [tree(i) for i in leaves])
+    else:
+        map = []
+        for branch in branches(t):
+            map += [sprout_leaves(branch,leaves)]
+        return tree(label(t), map)
+    """
+    # an alternate solution
+
+    if(is_leaf(t)):
         return tree(label(t), [tree(i) for i in leaves])
     else:
         return tree(label(t), [sprout_leaves(branch, leaves) for branch in branches(t)])
+    
+    """
 
 # Abstraction tests for sprout_leaves and berry_finder
 def check_abstraction():
@@ -179,7 +190,26 @@ def add_trees(t1, t2):
       5
     """
     "*** YOUR CODE HERE ***"
-
+    """
+        Although I have solved this problem, I didn't completely understand this recursive function about tree.At last,     I copied others' solutions through Google and GitHub.
+        1.Author:Lei Yan
+        URL:https://leiyan.net.cn/post/2019/03/20/add-trees-a-cs61a-lab/
+        2.Author:PKUFlyingPig
+        URL:https://github.com/PKUFlyingPig/CS61A
+    """
+    if(len(t1)<len(t2)):
+        new_branch = branches(t1) + [tree(0) for _ in range(len(t2)-len(t1))]
+        new_t1 = tree(label(t1), new_branch)
+        return add_trees(new_t1, t2)
+    elif(len(t1)>len(t2)):
+        return add_trees(t2, t1)
+    else:
+        if(is_leaf(t1)):
+            return [label(t1)+label(t2)]
+        map = []
+        for branch1, branch2 in zip(branches(t1), branches(t2)):
+            map += [add_trees(branch1, branch2)]
+        return tree(label(t1)+label(t2), map)
 
 def build_successors_table(tokens):
     """Return a dictionary: keys are words; values are lists of successors.
@@ -200,6 +230,9 @@ def build_successors_table(tokens):
     for word in tokens:
         if prev not in table:
             "*** YOUR CODE HERE ***"
+            table[prev] = [word]
+        else:
+            table[prev].append(word)
         "*** YOUR CODE HERE ***"
         prev = word
     return table
@@ -218,6 +251,9 @@ def construct_sent(word, table):
     result = ''
     while word not in ['.', '!', '?']:
         "*** YOUR CODE HERE ***"
+        result += word
+        result += ' '
+        word = random.choice(table[word])
     return result.strip() + word
 
 def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com/shakespeare.txt'):
@@ -231,8 +267,8 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
         return shakespeare.read().decode(encoding='ascii').split()
 
 # Uncomment the following two lines
-# tokens = shakespeare_tokens()
-# table = build_successors_table(tokens)
+tokens = shakespeare_tokens()
+table = build_successors_table(tokens)
 
 def random_sent():
     import random
