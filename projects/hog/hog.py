@@ -147,6 +147,7 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             last_score1 = this_score
             if (is_swap(score1, score0)):
                 score0, score1 = score1, score0
+        say = say(score0, score1)
         who = other(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
@@ -244,6 +245,42 @@ def announce_highest(who, last_score=0, running_high=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    """
+    when we try to modify the parameters or defined variable of the parent frame in the child frame,
+    we need to declare them with the keyword nonlocal(there is a pitfall, I tried many times but could not get the 
+    correct result, at the same time, python interpreter does not report a error, 
+    this operation is also needed when trying to assign values to the parameters of the parent frame in the child frame. )
+    
+    """
+    def say_highest(score0, score1):
+        # if we don't declare these variable, we don't get the correct result and python interpreter don't report a error
+        nonlocal last_score, running_high
+        if(who == 0):
+            this_turn_diff = score0 - last_score
+            if(this_turn_diff > running_high):
+                print(f"{this_turn_diff} point(s)! That's the biggest gain yet for Player {who}")
+                return announce_highest(who, score0, this_turn_diff)
+            return announce_highest(who, score0, running_high)
+        else:
+            this_turn_diff = score1 - last_score
+            if(this_turn_diff > running_high):
+                print(f"{this_turn_diff} point(s)! That's the biggest gain yet for Player {who}")
+                return announce_highest(who, score1, this_turn_diff)
+            return announce_highest(who, score1, running_high)
+    return say_highest
+    """
+    solution in FlyingPig's GitHub:
+    
+        def say(*scores):
+            assert len(scores) == 2
+            gain = scores[who] - last_score
+            if gain > running_high:
+                print(gain, "point(s)! That's the biggest gain yet for Player", who)
+                return announce_highest(who, scores[who], gain)
+            return announce_highest(who, scores[who], running_high)
+
+        return say
+    """
     # END PROBLEM 7
 
 
@@ -285,6 +322,12 @@ def make_averaged(original_function, trials_count=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def f(*args):
+        sum_val = 0
+        for i in range(trials_count):
+            sum_val  += original_function(*args)
+        return sum_val/trials_count
+    return f
     # END PROBLEM 8
 
 
@@ -299,6 +342,15 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    average = make_averaged(roll_dice, trials_count)
+    max_val = 0
+    ans = 1
+    for i in range(1, 11):
+        x = average(i, dice)
+        if(x > max_val):
+            max_val = x
+            ans = i
+    return ans
     # END PROBLEM 9
 
 

@@ -62,14 +62,13 @@ test = {
           >>> strat0 = lambda score, opponent: 1 - opponent // 10
           >>> strat1 = always_roll(3)
           >>> s0, s1 = play(strat0, strat1, dice=make_test_dice(4, 2, 6), goal=15, say=echo)
-          f4d41f4e29a08f003e0a9a5473c61d5e
-          461ff541bd06a2e3310447d10cc6615b
-          caedb1cff772abe19708326f743222d2
-          25a122abac000b953fec91f46575dbd9
-          # locked
+          4 0
+          4 12
+          12 13
+          12 25
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -82,16 +81,15 @@ test = {
           ...     print(s0, s1)
           ...     return total
           >>> s0, s1 = play(always_roll(1), always_roll(1), dice=make_test_dice(2, 3), goal=15, say=echo)
-          accd0f5c57e0f3fad13791aaecafc38b
-          26f5762c932a578994ea1c8fc7fa6c02
-          e3bcdb2715b868db45692ec2a5971a84
-          b5f748b949729bc0225f547dce8206af
-          21ec796517d0ce8312bdbd311b5a35c3
-          6790f7070fa643e868f99363486b6275
-          # locked
+          2 0
+          5
+          4 3
+          13
+          6 9
+          21
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
@@ -114,16 +112,15 @@ test = {
           ...     print('**', s1)
           ...     return echo_1
           >>> s0, s1 = play(always_roll(1), always_roll(1), dice=make_test_dice(2), goal=3, say=both(echo_0, echo_1))
-          3f321d5ce997d2f3989685f56de8bdce
-          4a64fe964dc771a219ed773c3a146c75
-          3f321d5ce997d2f3989685f56de8bdce
-          e4010b4a7d51e81cc1f49e08b015b8eb
-          a6ba27fb33805545324a96eadcd30897
-          e4010b4a7d51e81cc1f49e08b015b8eb
-          # locked
+          * 2
+          ** 0
+          * 2
+          ** 2
+          * 4
+          ** 2
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
