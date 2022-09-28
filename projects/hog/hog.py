@@ -347,6 +347,7 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     ans = 1
     for i in range(1, 11):
         x = average(i, dice)
+        # print(i, "---", x)
         if(x > max_val):
             max_val = x
             ans = i
@@ -399,7 +400,11 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+    # return 6  # Replace this statement
+    if(free_bacon(opponent_score) >= cutoff):
+        return 0
+    else:
+        return num_rolls
     # END PROBLEM 10
 
 
@@ -409,17 +414,38 @@ def swap_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    # return 6  # Replace this statement
+    x = free_bacon(opponent_score)
+    if((is_swap(score + x, opponent_score) and opponent_score > score+x)):
+        return 0
+    elif(not is_swap(score+x, opponent_score) and x >= cutoff):
+        return 0
+    else:
+        return num_rolls
     # END PROBLEM 11
 
 
-def final_strategy(score, opponent_score):
+def final_strategy(score, opponent_score, cutoff=5, num_rolls=6):
     """Write a brief description of your final strategy.
 
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Replace this statement
+    # return 6  # Replace this statement
+    fb = free_bacon(opponent_score)
+    if is_swap(score + fb, opponent_score):
+        if opponent_score <= score + fb:
+            return num_rolls
+        else:
+            if opponent_score - score - fb < cutoff:
+                return num_rolls
+            else:
+                return 0
+    else:
+        if fb >= cutoff:
+            return 0
+        else:
+            return num_rolls
     # END PROBLEM 12
 
 
