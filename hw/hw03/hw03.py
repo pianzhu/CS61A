@@ -175,9 +175,18 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if (n == 1):
+        print_move(start, end)
+        return
+    else:
+        mid = 6 - start - end
+        move_stack(n-1, start, mid)
+        print_move(start, end)
+        move_stack(n-1, mid, end)
 
 
 from operator import sub, mul
+from functools import reduce
 
 def make_anonymous_factorial():
     """Return the value of an expression that computes factorial.
@@ -189,5 +198,14 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    """
+        def fn(n):
+            if(n == 1):
+                return 1
+            else:
+                return mul(n, fn(sub(n, 1)))
+        return fn
+    """
+
+    return lambda x: reduce(mul, range(1, x+1))
 
