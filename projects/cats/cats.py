@@ -151,28 +151,36 @@ def shifty_shifts(start, goal, limit):
 
     # END PROBLEM 6
 
-from 
+from functools import lru_cache
 
+@lru_cache()
 def meowstake_matches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
     # assert False, 'Remove this line'
 
-    if ______________: # Fill in the condition
+    if start == goal: # Fill in the condition
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return 0
         # END
 
-    elif ___________: # Feel free to remove or add additional cases
+    elif len(start) == 0 or len(goal) == 0: # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return max(len(start), len(goal))
         # END
-
+    elif limit == 0:
+        return 1
     else:
-        add_diff = ...  # Fill in these lines
-        remove_diff = ... 
-        substitute_diff = ... 
+        if start[0] == goal[0]:
+            return meowstake_matches(start[1:], goal[1:], limit)
+        else:
+            add_diff = meowstake_matches(start, goal[1:], limit - 1)  # Fill in these lines
+            remove_diff = meowstake_matches(start[1:], goal, limit - 1)
+            substitute_diff = meowstake_matches(start[1:], goal[1:], limit - 1)
         # BEGIN
-        "*** YOUR CODE HERE ***"
+            "*** YOUR CODE HERE ***"
+            return min(add_diff, remove_diff, substitute_diff) + 1
         # END
     """
       another solution with dynamic programming
