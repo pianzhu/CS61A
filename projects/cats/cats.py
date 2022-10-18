@@ -185,16 +185,16 @@ def meowstake_matches(start, goal, limit):
     """
       another solution with dynamic programming
         start = ' ' + start
-            goal = ' ' + goal
-            f = [[0 for _ in range(len(goal))] for _ in range(len(start))]
-            for i in range(len(start)):
-                f[i][0] = i
-            for i in range(len(goal)):
-                f[0][i] = i
-            for i in range(1, len(start)):
-                for j in range(1, len(goal)):
-                    f[i][j] = min(f[i-1][j] + 1, f[i][j-1] + 1, f[i-1][j-1] + (1 if start[i] != goal[j] else 0))
-            return f[len(start) - 1][len(goal) - 1]
+        goal = ' ' + goal
+        f = [[0 for _ in range(len(goal))] for _ in range(len(start))]
+        for i in range(len(start)):
+            f[i][0] = i
+        for i in range(len(goal)):
+            f[0][i] = i
+        for i in range(1, len(start)):
+            for j in range(1, len(goal)):
+                f[i][j] = min(f[i-1][j] + 1, f[i][j-1] + 1, f[i-1][j-1] + (1 if start[i] != goal[j] else 0))
+        return f[len(start) - 1][len(goal) - 1]
     """
 def final_diff(start, goal, limit):
     """A diff function. If you implement this function, it will be used."""
@@ -210,6 +210,15 @@ def report_progress(typed, prompt, id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    count = 0
+    for i, j in zip(typed, prompt):
+        if i == j:
+            count += 1
+        else:
+            break
+    radio = count / len(prompt)
+    send({'id': id, 'progress': radio})
+    return radio
     # END PROBLEM 8
 
 
@@ -236,8 +245,27 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    timestamps = [[0 for _ in range(len(times_per_player[0]) - 1)] for _ in range(len(times_per_player))]
+    for i in range(len(times_per_player)):
+        for j in range(1, len(times_per_player[i])):
+            timestamps[i][j - 1] = times_per_player[i][j] - times_per_player[i][j - 1]
+    # for i in timestamps:
+    #     for j in range(len(i)):
+    #         print(i[j], end = ' ')
+    #     print()
+    return game(words, timestamps)
     # END PROBLEM 9
-
+    """
+      another solution with python leatures
+      @source: FlyingPig
+        tpp = []
+        for player in times_per_player:
+            time = []
+            for i in range(len(player) - 1):
+                time.append(player[i + 1] - player[i])
+            tpp.append(time)
+        return game(words, tpp)
+    """
 
 def fastest_words(game):
     """Return a list of lists of which words each player typed fastest.
@@ -251,6 +279,18 @@ def fastest_words(game):
     words = range(len(all_words(game)))    # An index for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    fastest_list = [[] for _ in players]
+    for i in words:
+        fastest_time = 0x3f3f3f3f
+        fastest_word = ''
+        fastest_player = 0
+        for j in players:
+            if time(game, j, i) < fastest_time:
+                fastest_time = time(game, j, i)
+                fastest_word = word_at(game, i)
+                fastest_player = j
+        fastest_list[fastest_player].append(fastest_word)
+    return fastest_list
     # END PROBLEM 10
 
 
@@ -306,6 +346,26 @@ def key_distance_diff(start, goal, limit):
 
     # BEGIN PROBLEM EC1
     "*** YOUR CODE HERE ***"
+    start = ' ' + start
+    goal = ' ' + goal
+    f = [[0 for _ in range(len(goal))] for _ in range(len(start))]
+    for i in range(len(start)):
+        f[i][0] = i
+    for i in range(len(goal)):
+        f[0][i] = i
+    for i in range(1, len(start)):
+        for j in range(1, len(goal)):
+            f[i][j] = min(f[i - 1][j] + 1, f[i][j - 1] + 1, f[i - 1][j - 1] + (key_distance[(start[i], goal[j])] if start[i] != goal[j] else 0))
+            # f[i][j] = min(f[i - 1][j] + 1, f[i][j - 1] + 1)
+            # if start[i] != goal[j]:
+            #     if f[i][j] > f[i - 1][j - 1] + key_distance[(start[i], goal[j])]:
+            #         f[i][j] = f[i - 1][j - 1] + key_distance[(start[i], goal[j])]
+            # else:
+            #     f[i][j] = min(f[i][j], f[i - 1][j - 1])
+    if limit < f[len(start) - 1][len(goal) - 1]:
+        return float("inf")
+    else:
+        return f[len(start) - 1][len(goal) - 1]
     # END PROBLEM EC1
 
 def memo(f):
@@ -326,6 +386,7 @@ def faster_autocorrect(user_word, valid_words, diff_function, limit):
 
     # BEGIN PROBLEM EC2
     "*** YOUR CODE HERE ***"
+    
     # END PROBLEM EC2
 
 
