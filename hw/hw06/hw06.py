@@ -118,9 +118,11 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
 
 class Coin:
     def __init__(self, year):
@@ -128,6 +130,8 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        time = Mint.current_year - self.year
+        return self.cents + (time - 50 if time > 50 else 0)
 
 class Nickel(Coin):
     cents = 5
@@ -162,7 +166,33 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
-
+    def bst_max(t):
+        maxv = -0x3f3f3f3f
+        if t.is_leaf():
+            return t.label
+        for i in t.branches:
+            maxv =  max(bst_max(i), t.label, maxv)
+        return maxv
+    def bst_min(t):
+        minv = 0x3f3f3f3f
+        if t.is_leaf():
+            return t.label
+        for i in t.branches:
+            minv = min(minv, bst_min(i), t.label)
+        return minv
+    if t.is_leaf():
+        return True
+    else:
+        branch_label = []
+        for i in t.branches:
+            branch_label.append(i)
+        if len(branch_label) == 2:
+            if bst_max(branch_label[0]) > t.label or t.label >= bst_min(branch_label[1]):
+                return False
+        elif len(branch_label) != 1:
+            return False
+        for i in t.branches:
+            return is_bst(i)
 
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
@@ -180,7 +210,7 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
-
+    
 
 def path_yielder(t, value):
     """Yields all possible paths from the root of t to a node with the label value
