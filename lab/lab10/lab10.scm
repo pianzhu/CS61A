@@ -16,7 +16,7 @@
 
 (define (filter-lst fn lst)
   'YOUR-CODE-HERE
-  (if (fn lst) )
+  (if (not car(lst) nil) )
 )
 
 ;;; Tests
