@@ -211,9 +211,13 @@ def store_digits(n):
     """
     "*** YOUR CODE HERE ***"
     if n < 10:
-        return
-    store_digits(n // 10)
-    head = Link(n // 10)
+        return Link(n)
+    p = head = store_digits(n // 10)
+    tail = Link(n % 10)
+    while p.rest != Link.empty:
+        p = p.rest
+    p.rest = tail
+    return head
 
 def path_yielder(t, value):
     """Yields all possible paths from the root of t to a node with the label value
@@ -249,13 +253,13 @@ def path_yielder(t, value):
     >>> sorted(list(path_to_2))
     [[0, 2], [0, 2, 1, 2]]
     """
-
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
+    if t.label == value:
+        return [t.label]
+    for i in t.branches:
+        for j in path_yielder(i, value):
             "*** YOUR CODE HERE ***"
+            yield [t.label] + j
 
 
 def remove_all(link , value):
@@ -276,7 +280,22 @@ def remove_all(link , value):
     <0 1>
     """
     "*** YOUR CODE HERE ***"
-
+    if link.rest == Link.empty:
+        return
+    elif link.rest.first == value:
+        link.rest = link.rest.rest
+        remove_all(link, value)
+    else:
+        remove_all(link.rest, value)
+    """
+      anther solution whithout using recursion:
+        p = link
+        while p.rest != Link.empty:
+            if p.rest.first == value:
+                p.rest = p.rest.rest
+            else:
+                p = p.rest
+    """
 
 def deep_map(f, link):
     """Return a Link with the same structure as link but with fn mapped over
@@ -292,8 +311,35 @@ def deep_map(f, link):
     <<2 <4 6> 8> <<10>>>
     """
     "*** YOUR CODE HERE ***"
-
-
+    # if link == Link.empty:
+    #     return Link.empty
+    # if isinstance(link.first, Link):
+    #     first = deep_map(f, link.first)
+    # else:
+    #     first = f(link.first)
+    # return Link(first, deep_map(f, link.rest))
+    link_list = []
+    while link != Link.empty:
+        if isinstance(link.first, Link):
+            link_list.append(deep_map(f, link.first))
+        else:
+            link_list.append(link.first)
+    for i in link_list[1:]:
+        new_list = Link(new_list, i)
+    return new_list
+    """
+      another solution without recursion:
+        link_list = []
+        while link != Link.empty:
+            if isinstance(link.first, Link):
+                link_list.append(deep_map(f, link.first))
+            else:
+                link_list.append(link.first)
+        new_list = Link(link_list[0])
+        for i in link_list[1:]:
+            new_list = Link(new_list, i)
+        return new_list
+    """
 class Tree:
     """
     >>> t = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
