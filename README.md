@@ -1,2 +1,2 @@
-# cs61a 20-summer
+# CS61A 20 summer
 
